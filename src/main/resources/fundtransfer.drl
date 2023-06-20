@@ -1,0 +1,32 @@
+import com.ibm.poc.model.FtRq;
+
+rule "Transfer amount is above 50000 PanCard is required"
+    when
+        transferObject : FtRq( amount > 50000 );
+    then
+        transferObject.setMessage("Pan Card is required");
+        transferObject.setPanRequired(true);
+end;
+
+rule "Transfer amount is below 50000 PanCard is not required"
+    when
+        transferObject : FtRq( amount < 50000 );
+    then
+        transferObject.setMessage("Pan Card is not required");
+        transferObject.setPanRequired(false);
+end;
+
+rule "Transfer amount is above 250000"
+    when
+        transferObject : FtRq( amount >=250000 );
+    then
+        transferObject.setMessage("Not able to transfer amount day limit is 250,000 or lessthan 250,000 only");
+        transferObject.setLimitCheck(false);
+end;
+rule "Transfer amount is below 250000"
+    when
+        transferObject : FtRq( amount < 250000 );
+    then
+        transferObject.setMessage("able to transfer amount");
+        transferObject.setLimitCheck(true);
+end;
